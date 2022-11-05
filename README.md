@@ -133,7 +133,7 @@ docker container rm dsub
 ```
 
 ## Dockerfile
-Details on how the Dockerfile was created are in a [gist]()
+Details on how the Dockerfile was created are in a [gist](https://gist.github.com/rwcitek/b3dbb57c56d3d450bdef374f643604d5)
 
 To view the Dockerfile that created the image.
 ```bash
