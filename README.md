@@ -38,6 +38,7 @@ docker container exec -it dsub /bin/bash
 ```
 
 ## Setup environment
+This example is using Ubuntu 22.04 and tags it with `:dsub` to aid in later identifying stopped instances.
 ```bash
 docker image pull ubuntu:22.04
 docker image tag ubuntu:22.04 ubuntu:dsub
@@ -46,6 +47,7 @@ docker image tag ubuntu:22.04 ubuntu:dsub
 
 ## Run a command
 ```bash
+# Run dsub
 dsub \
   --provider local \
   --image ubuntu:dsub \
@@ -57,8 +59,10 @@ dsub \
 
 ## Run a script
 ```bash
+# Create a script
 echo 'echo "Hello World" > "${OUT}"' > hello.sh
 
+# Run dsub
 dsub \
   --provider local \
   --image ubuntu:dsub \
