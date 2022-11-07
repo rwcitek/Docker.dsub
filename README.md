@@ -116,7 +116,10 @@ That's why it's nice to use an image that is tagged with "dsub"
 # Remove finished dsub instances
 docker container list -a |
   awk '$2 ~ ":dsub" {print $1}' |
-  xargs docker container rm 
+  xargs docker container rm
+
+# Remove dsub tagged instance
+docker image rm ubuntu:dsub
 
 ## Remove the temporary folders: output and logging
 cd && rm -rf ${TMPDIR}
