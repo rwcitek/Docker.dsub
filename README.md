@@ -118,7 +118,7 @@ docker container list -a |
   awk '$2 ~ ":dsub" {print $1}' |
   xargs docker container rm
 
-# Remove dsub tagged instance
+# Remove dsub tagged image
 docker image rm ubuntu:dsub
 
 ## Remove the temporary folders: output and logging
