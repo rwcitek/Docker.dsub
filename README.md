@@ -55,7 +55,7 @@ dsub \
   --provider local \
   --image ubuntu:dsub \
   --logging "${TMPDIR:-/tmp}/dsub-test/logging/" \
-  --output OUT="${TMPDIR:-/tmp}/dsub-test/output/out.txt" \
+  --output OUT="${TMPDIR:-/tmp}/dsub-test/output/out.command.txt" \
   --command 'echo "Hello World" > "${OUT}"' \
   --wait
 ```
@@ -70,7 +70,7 @@ dsub \
   --provider local \
   --image ubuntu:dsub \
   --logging "${TMPDIR:-/tmp}/dsub-test/logging/" \
-  --output OUT="${TMPDIR:-/tmp}/dsub-test/output/out.txt" \
+  --output OUT="${TMPDIR:-/tmp}/dsub-test/output/out.script.txt" \
   --script hello.sh \
   --wait
 ```
@@ -84,11 +84,11 @@ From https://github.com/DataBiosphere/dsub/tree/main/examples/custom_scripts#cre
 echo 'Hello, world!' > /tmp/input.txt
 
 # Create the TSV file with inputs and outputs
-<<'eof' sed -e's/ *{tab} */\t/g' > run.tsv
+<<eof sed -e's/ *{tab} */\t/g' > run.tsv
 --input INPUT  {tab} --output OUTPUT
-/tmp/input.txt {tab} /tmp/output1.txt
-/tmp/input.txt {tab} /tmp/output2.txt
-/tmp/input.txt {tab} /tmp/output3.txt
+/tmp/input.txt {tab} ${TMPDIR:-/tmp}/dsub-test/output/out1.multi.txt
+/tmp/input.txt {tab} ${TMPDIR:-/tmp}/dsub-test/output/out2.multi.txt
+/tmp/input.txt {tab} ${TMPDIR:-/tmp}/dsub-test/output/out3.multi.txt
 eof
 
 # Create a script that generates output from input
