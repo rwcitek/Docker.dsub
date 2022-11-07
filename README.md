@@ -147,8 +147,21 @@ To view the Dockerfile that created the image.
 docker container run --rm rwcitek/dsub cat /Dockerfile
 ```
 
+## Run the gist
+Build the image.
+```bash
+curl -s https://gist.github.com/rwcitek/b3dbb57c56d3d450bdef374f643604d5 |
+grep -o '/.*/raw/.*.sh' |
+xargs -r -I {} curl -L -s https://gist.githubusercontent.com/{} > dsub.docker.build.sh
+bash dsub.docker.build.sh
+docker image list | grep dsub
+```
 
-
-
-
-
+Push to Dockerhub.
+```bash
+tag=$( date +%s )
+docker image tag dsub:build-latest dsub:${tag}
+docker image tag dsub:build-latest rwcitek/dsub:${tag}
+docker image tag dsub:build-latest rwcitek/dsub
+docker image list | grep dsub
+```
