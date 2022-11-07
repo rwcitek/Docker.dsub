@@ -82,9 +82,7 @@ From https://github.com/DataBiosphere/dsub/tree/main/examples/custom_scripts#cre
 ```bash
 # Create a mock input file
 echo 'Hello, world!' > /tmp/input.txt
-```
 
-```bash
 # Create the TSV file with inputs and outputs
 <<'eof' sed -e's/ *{tab} */\t/g' > run.tsv
 --input INPUT  {tab} --output OUTPUT
@@ -92,18 +90,14 @@ echo 'Hello, world!' > /tmp/input.txt
 /tmp/input.txt {tab} /tmp/output2.txt
 /tmp/input.txt {tab} /tmp/output3.txt
 eof
-```
 
-```bash
 # Create a script that generates output from input
 <<'eof' cat > multi-job.sh
 #!/bin/bash
 sed -e 's/Hello/Greetings/' "${INPUT}" > "${OUTPUT}"
 date >> "${OUTPUT}"
 eof
-```
 
-```bash
 # Run dsub
 dsub \
   --provider local \
