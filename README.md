@@ -1,11 +1,11 @@
 # Docker.dsub
 ## Running dsub in Docker
 
-[dsub](https://github.com/DataBiosphere/dsub) is a great way to run a bunch of commands in parallel in the cloud.
-But dsub requires a bunch of other tools for it to work.
+[dsub](https://github.com/DataBiosphere/dsub) is a great way to run a bunch of commands in parallel in the cloud, currently Google Cloud Platform.
+But dsub requires several other tools for it to work.
 Those tools have been wrapped up in a [dsub Docker container](https://hub.docker.com/r/rwcitek/dsub)
 to keep the host environment uncluttered.
-The end result is that you can simply run dsub commands from within the Docker container.
+The end result is that you can quickly get started with dsub by launching a Docker container and running dsub commands.
 
 Below are some examples of running dsub using the local provider.
 
