@@ -23,6 +23,11 @@ Options:
 - -v : mounts both the docker.sock and the host /tmp folder.
 
 ```bash
+# Optional -- pull down the image
+docker image pull rwcitek/dsub
+```
+
+```bash
 ( dsub_tmp=/tmp/dsub-$( date +%s ) &&
 docker container run \
   -d \
