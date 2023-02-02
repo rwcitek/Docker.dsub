@@ -17,10 +17,10 @@ This enables the instance to launch other Docker instances and to clean up after
 
 
 Options:
-- -d : starts the dsub instance in a detached ( or service or daemon ) mode
-- -e : passes the dsub_tmp variable into the instance, accessable as TMPDIR
-- -w : ensures the tempoary folder is created within the instance
-- -v : mounts both the docker.sock and the host /tmp folder.
+- --detach  : starts the dsub instance in a detached ( or service or daemon ) mode
+- --volume  : mounts both the docker.sock and the host /tmp folder.
+- --workdir : ensures the tempoary folder is created within the instance
+- --env     : passes the dsub_tmp variable into the instance, accessable as TMPDIR
 
 ```bash
 # Optional -- pull down the image
@@ -30,12 +30,12 @@ docker image pull rwcitek/dsub
 ```bash
 ( dsub_tmp=/tmp/dsub-$( date +%s ) &&
 docker container run \
-  -d \
-  --name dsub \
-  -e TMPDIR=${dsub_tmp} \
-  -w ${dsub_tmp} \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v /tmp:/tmp \
+  --detach \
+  --name    dsub \
+  --volume  /var/run/docker.sock:/var/run/docker.sock \
+  --volume  /tmp:/tmp \
+  --env     TMPDIR=${dsub_tmp} \
+  --workdir ${dsub_tmp} \
   rwcitek/dsub sleep inf
 )
 ```
