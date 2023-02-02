@@ -59,8 +59,8 @@ docker image tag ubuntu:22.04 ubuntu:dsub
 dsub \
   --provider local \
   --image ubuntu:dsub \
-  --logging "${TMPDIR:-/tmp}/dsub-test/logging/" \
-  --output OUT="${TMPDIR:-/tmp}/dsub-test/output/out.command.txt" \
+  --logging "${TMPDIR}/dsub-test/logging/" \
+  --output OUT="${TMPDIR}/dsub-test/output/out.command.txt" \
   --command 'echo "Hello World" > "${OUT}"' \
   --wait
 ```
@@ -74,8 +74,8 @@ echo 'echo "Hello World" > "${OUT}"' > hello.sh
 dsub \
   --provider local \
   --image ubuntu:dsub \
-  --logging "${TMPDIR:-/tmp}/dsub-test/logging/" \
-  --output OUT="${TMPDIR:-/tmp}/dsub-test/output/out.script.txt" \
+  --logging "${TMPDIR}/dsub-test/logging/" \
+  --output OUT="${TMPDIR}/dsub-test/output/out.script.txt" \
   --script hello.sh \
   --wait
 ```
@@ -91,9 +91,9 @@ echo 'Hello, world!' > /tmp/input.txt
 # Create the TSV file with inputs and outputs
 <<eof sed -e's/ *{tab} */\t/g' > run.tsv
 --input INPUT  {tab} --output OUTPUT
-/tmp/input.txt {tab} ${TMPDIR:-/tmp}/dsub-test/output/out1.multi.txt
-/tmp/input.txt {tab} ${TMPDIR:-/tmp}/dsub-test/output/out2.multi.txt
-/tmp/input.txt {tab} ${TMPDIR:-/tmp}/dsub-test/output/out3.multi.txt
+/tmp/input.txt {tab} ${TMPDIR}/dsub-test/output/out1.multi.txt
+/tmp/input.txt {tab} ${TMPDIR}/dsub-test/output/out2.multi.txt
+/tmp/input.txt {tab} ${TMPDIR}/dsub-test/output/out3.multi.txt
 eof
 
 # Create a script that generates output from input
@@ -107,7 +107,7 @@ eof
 dsub \
   --provider local \
   --image ubuntu:dsub \
-  --logging "${TMPDIR:-/tmp}/dsub-test/logging/" \
+  --logging "${TMPDIR}/dsub-test/logging/" \
   --script ./multi-job.sh \
   --tasks ./run.tsv \
   --wait
@@ -121,7 +121,7 @@ That's why it's nice to use an image that is tagged with "dsub"
 # Remove finished dsub instances
 docker container list -a |
   awk '$2 ~ ":dsub" {print $1}' |
-  xargs docker container rm
+  xargs -r docker container rm
 
 # Remove dsub tagged image
 docker image rm ubuntu:dsub
@@ -161,9 +161,22 @@ docker image list | grep dsub
 
 Push to Dockerhub.
 ```bash
+# create tags
 tag=$( date +%s )
 docker image tag dsub:build-latest dsub:${tag}
 docker image tag dsub:build-latest rwcitek/dsub:${tag}
 docker image tag dsub:build-latest rwcitek/dsub
 docker image list | grep dsub
+
+# log in
+docker login
+
+# push to Dockerhub
+docker push rwcitek/dsub:${tag}
+docker push rwcitek/dsub:latest
 ```
+
+
+
+
+
