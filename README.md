@@ -11,8 +11,8 @@ Below are some examples of running dsub using the local provider.
 
 ## Start a detached instance
 Wrapping the commands in parentheses keeps the current shell uncluttered.
-The dsub_tmp is created to provide a unique temporary folder in /tmp/ ( was easier than mktemp ).
-And we mount the Docker socket ( docker.sock ) to create a "Docker-out-of-Docker" environment.
+The `dsub_tmp` variable is created to provide a unique temporary folder in /tmp/ ( was easier than mktemp ).
+And we mount the Docker socket ( `docker.sock` ) to create a "Docker-out-of-Docker" environment.
 This enables the instance to launch other Docker instances and to clean up after itself.
 
 
