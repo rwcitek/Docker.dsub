@@ -30,6 +30,7 @@ docker image pull rwcitek/dsub
 ```bash
 ( dsub_tmp=/tmp/dsub-$( date +%s ) &&
 docker container run \
+  --rm \
   --detach \
   --name    dsub \
   --volume  /var/run/docker.sock:/var/run/docker.sock \
@@ -138,7 +139,6 @@ ps faux | grep [d]efunct
 Once out of the container, remove the container.
 ```bash
 docker container stop dsub
-docker container rm dsub
 ```
 
 ## Dockerfile
