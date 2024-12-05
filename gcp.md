@@ -30,18 +30,29 @@ curl -fSL -o /tmp/get-docker.sh https://get.docker.com
 sed -i -e 's/sleep 20/sleep 1/' /tmp/get-docker.sh
 sudo sh /tmp/get-docker.sh
 sudo usermod -aG docker ${USER}
+exec sudo su - ${USER} 
 ```
 
 ### pull an image from Docker Hub
 ```bash
+docker image list -a
+docker pull ubuntu:24.04
+docker image list -a
 ```
 
 ### set up GCR
+
+
 ```bash
+
+
 ```
 
 ### push an image to GCR
 ```bash
+docker push us.gcr.io:   example:latest
+
+
 ```
 
 ### pull an image from GCR
