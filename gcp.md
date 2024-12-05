@@ -1,5 +1,67 @@
 # Notes
 
+## Setup
+
+### create a VM in GCP
+
+### connect to the VM using web SSH
+
+### update system packages
+```bash
+```
+
+### install docker
+```bash
+```
+
+### pull an image from Docker Hub
+```bash
+```
+
+### set up GCR
+```bash
+```
+
+### push an image to GCR
+```bash
+```
+
+### pull an image from GCR
+```bash
+```
+
+### set up GCS
+```bash
+```
+
+### create a bucket in GCR
+```bash
+gcloud storage buckets list
+gcloud storage buckets create gs://dds-cohort-15
+gcloud storage buckets list
+gcloud storage ls
+gcloud storage ls gs://dds-cohort-15/
+```
+
+### copy a file to a bucket in GCS
+```bash
+gsutil cp /tmp/input.txt gs://dds-cohort-15/
+gsutil ls gs://dds-cohort-15/**
+```
+
+### install python
+```bash
+sudo apt-get install -y python3-pip python3-venv
+python3 -m venv dsub
+source dsub/bin/activate
+```
+
+### install dsub
+```bash
+pip3 install dsub
+```
+
+## Running dsub
 ```bash
 dsub \
   --provider google-cls-v2 \
