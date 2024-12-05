@@ -8,10 +8,17 @@
 
 ### update system packages
 ```bash
+sudo apt-get update
+sudo apt-get -y dist-upgrade
+sudo reboot
 ```
 
 ### install docker
 ```bash
+curl -fSL -o /tmp/get-docker.sh https://get.docker.com
+sed -i -e 's/sleep 20/sleep 1/' /tmp/get-docker.sh
+sudo sh /tmp/get-docker.sh
+sudo usermod -aG docker ${USER}
 ```
 
 ### pull an image from Docker Hub
