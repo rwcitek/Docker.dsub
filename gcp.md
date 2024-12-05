@@ -3,8 +3,19 @@
 ## Setup
 
 ### create a VM in GCP
+- https://console.cloud.google.com/compute/instancesAdd
+
+Setup
+- E2-micro
+- Boot disk:
+  - Image: Ubuntu 24.04 LTS88, x86/64, amd64
+  - Type: standard persistent disk
+- Access scopes:
+  - Allow full access to all Cloud APIs
 
 ### connect to the VM using web SSH
+- https://console.cloud.google.com/compute/instances
+
 
 ### update system packages
 ```bash
