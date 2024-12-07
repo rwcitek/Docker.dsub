@@ -2,6 +2,10 @@
 
 ## Setup
 
+In part, based on ...
+- https://cloud.google.com/batch/docs/dsub
+
+
 ### create a VM in GCP
 - https://console.cloud.google.com/compute/instancesAdd
 
