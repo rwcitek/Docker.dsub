@@ -71,6 +71,14 @@ apt-get -y dist-upgrade
 pip install dsub --upgrade
 ```
 
+## authenticate to GCP
+
+Not needed if running on a GCP VM.
+
+```bash
+gcloud auth login --no-launch-browser
+```
+
 ## set up GCP project
 
 Skip to the next code block if running on a GCP VM.
@@ -389,14 +397,6 @@ gsutil cat gs://dds-cohort-15/output/*multi.txt
 docker image list -a
 docker pull ubuntu:24.04
 docker image list -a
-```
-
-### authenticate to GCP
-
-Not needed if running on a GCP VM.
-
-```bash
-gcloud auth login --no-launch-browser
 ```
 
 ### set up GCR
