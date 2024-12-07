@@ -301,23 +301,23 @@ Create a script that generates output from input
 #!/bin/bash
 sed -e 's/Hello/Greetings/' "${INPUT}" > "${OUTPUT}"
 date >> "${OUTPUT}"
+cat /etc/os-release >> "${OUTPUT}"
 eof
 ```
 
 Create the TSV file with inputs and outputs
 
 ```bash
+n=20
 <<eof sed -e's/ *{tab} */\t/g' > run.tsv
 --input INPUT  {tab} --output OUTPUT
-gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out1.multi.txt
-gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out2.multi.txt
-gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out3.multi.txt
-gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out4.multi.txt
-gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out5.multi.txt
-gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out6.multi.txt
-gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out7.multi.txt
-gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out8.multi.txt
-gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out9.multi.txt
+$(
+seq -w 1 10000 |
+head -${n} |
+while read seq ; do
+  echo gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out"${seq}".multi.txt
+done
+)
 eof
 
 cat -vetn run.tsv
@@ -352,19 +352,79 @@ Look at output
 gsutil cat gs://dds-cohort-15/output/*multi.txt
 ```
 
+## GCR
 
+### pull an image from Docker Hub
+
+Pull
+
+```bash
+docker image list -a
+docker pull alpine:latest
+docker image list -a
+```
+
+Create modified image
+
+```bash
+cat <<'eof' > Dockerfile
+FROM alpine:latest
+
+# Install bash
+RUN apk update && apk add bash
+
+# Set bash as the default shell (optional)
+CMD ["bash"]
+
+COPY Dockerfile /
+eof
+
+docker build -t alpine-with-bash:example .
+```
+
+### set up GCR
+
+Set up to use only us.gcr.io
+
+```bash
+gcloud auth configure-docker
+
+# vi ~/.docker/config.json
+```
+
+tag the image
+
+```bash
+my_project=$( gcloud config get-value project )
+docker image tag alpine-with-bash:example us.gcr.io/"${my_project}"/dsub:example
+docker image list -a | grep gcr.io
+```
+
+### push an image to GCR
+
+```bash
+docker image push us.gcr.io/"${my_project}"/dsub:example
+```
+
+### pull an image from GCR
+```bash
+docker image rm us.gcr.io/"${my_project}"/dsub:example
+docker image pull us.gcr.io/"${my_project}"/dsub:example
+```
 
 ## run dsub - trial 6
 
-Run dsub on spot VM instance
+Run dsub using a small spot VM instance with a custom image
 
 ```bash
 dsub \
   --provider google-cls-v2 \
-  --image gcr.io/google/ubuntu:24.04 \
+  --image us.gcr.io/"${my_project}"/dsub:example \
   --project "${my_project}" \
+  --machine-type e2-micro \
+  --disk-size 10 \
   --preemptible \
-  --retries 3 \
+  --retries 1 \
   --use-private-address \
   --regions us-central1 \
   --logging gs://dds-cohort-15/logging/ \
@@ -388,74 +448,4 @@ Look at output
 gsutil cat gs://dds-cohort-15/output/*multi.txt
 ```
 
-
-## GCR
-
-### pull an image from Docker Hub
-
-```bash
-docker image list -a
-docker pull ubuntu:24.04
-docker image list -a
-```
-
-### set up GCR
-
-Set up to use only us.gcr.io
-
-```bash
-gcloud auth configure-docker
-
-# vi ~/.docker/config.json
-```
-
-tag the image
-
-```bash
-my_project=$( gcloud config get-value project )
-docker tag ubuntu:24.04 us.gcr.io/"${my_project}"/dsub_example:latest
-docker image list -a | grep gcr.io
-```
-
-### push an image to GCR
-
-```bash
-docker push us.gcr.io/"${my_project}"/dsub_example:latest
-```
-
-### pull an image from GCR
-```bash
-docker pull us.gcr.io/"${my_project}"/dsub_example:latest
-```
-
-
-```bash
-dsub \
-  --provider google-cls-v2 \
-  --image us.gcr.io/my-project-colab-366203/rwcitek:latest \
-  --project my-project-colab-366203 \
-  --preemptible \
-  --retries 3 \
-  --regions us-central1 \
-  --logging gs://dds-cohort-15/logging/ \
-  --script ./multi-job-recon.sh \
-  --tasks ./run.recon.tsv \
-  --wait \
-  &
-```
-
-```bash
-dsub \
-  --provider google-cls-v2 \
-  --image us.gcr.io/my-project-colab-366203/dsub-example:latest \
-  --project my-project-colab-366203 \
-  --preemptible \
-  --retries 3 \
-  --regions us-central1 \
-  --logging gs://dds-cohort-15/logging/ \
-  --script ./multi-job.sh \
-  --tasks ./run.tsv \
-  --wait \
-  &
-```
 
