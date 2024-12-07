@@ -43,6 +43,7 @@ Pull the image
 ```bash
 docker image pull rwcitek/dsub
 ```
+
 Launch the container instance
 ```bash
 ( dsub_tmp=/tmp/dsub-$( date +%s ) &&
@@ -57,73 +58,114 @@ docker container run \
   rwcitek/dsub sleep inf
 )
 ```
+
 Exec into the instance
 ```bash
 docker container exec -it dsub /bin/bash
 ```
-### pull an image from Docker Hub
+
+Update the software in the container instance ( optional )
 ```bash
-docker image list -a
-docker pull ubuntu:24.04
-docker image list -a
+apt-get update
+apt-get -y dist-upgrade
+pip install dsub --upgrade
 ```
 
-### set up GCR
+## set up GCP project
 
+Skip to the next code block if running on a GCP VM.
 
 ```bash
+# list all projects
+gcloud projects list
 
+# pick one
+my_project=$ ( gcloud projects list | cut -d' ' -f1 | tail -n +2 | shuf -n 1 )
+my_project=abc
 
+# set default project
+gcloud config set project "${my_project}"
 ```
 
-### push an image to GCR
+assign project to a variable
+
 ```bash
-docker push us.gcr.io:   example:latest
-
-
+my_project=$( gcloud config get-value project )
 ```
 
-### pull an image from GCR
-```bash
-```
+## GCS 
 
 ### set up GCS
 ```bash
+gsutil ls
 ```
 
-### create a bucket in GCR
+### create a bucket in GCS
 ```bash
-gcloud storage buckets list
-gcloud storage buckets create gs://dds-cohort-15
-gcloud storage buckets list
-gcloud storage ls
-gcloud storage ls gs://dds-cohort-15/
+gsutil ls
+gsutil mb gs://dds-cohort-15
+gsutil ls
+gsutil ls gs://dds-cohort-15/
 ```
 
 ### copy a file to a bucket in GCS
+
+```bash
+echo 'Hello, world!' > /tmp/input.txt
+```
+
 ```bash
 gsutil cp /tmp/input.txt gs://dds-cohort-15/
 gsutil ls gs://dds-cohort-15/**
 ```
 
-### install python
+## application authenticate
+
+Likely not needed in GCP VM
+
 ```bash
-sudo apt-get install -y python3-pip python3-venv
-python3 -m venv dsub
-source dsub/bin/activate
+gcloud auth application-default login --no-launch-browser
 ```
 
-### install dsub
-```bash
-pip3 install dsub
-```
+## run dsub - trial 1
 
-## Running dsub
+Run dsub
+
 ```bash
 dsub \
   --provider google-cls-v2 \
   --image ubuntu:24.04 \
-  --project my-project-colab-366203 \
+  --project "${my_project}" \
+  --regions us-central1 \
+  --logging gs://dds-cohort-15/logging/ \
+  --command 'echo "Hello World"' \
+  --wait
+```
+
+Look at bucket
+
+```bash
+gsutil ls gs://dds-cohort-15/**
+
+gsutil ls gs://dds-cohort-15/logging/**
+```
+
+Look at logs
+
+```bash
+gsutil cat gs://dds-cohort-15/logging/echo--root*.log
+```
+
+
+## run dsub - trial 2
+
+Run dsub capturing output
+
+```bash
+dsub \
+  --provider google-cls-v2 \
+  --image ubuntu:24.04 \
+  --project "${my_project}" \
   --regions us-central1 \
   --logging gs://dds-cohort-15/logging/ \
   --output OUT=gs://dds-cohort-15/output/out.txt \
@@ -131,11 +173,33 @@ dsub \
   --wait
 ```
 
+Look at bucket
+
+```bash
+gsutil ls gs://dds-cohort-15/**
+
+gsutil ls gs://dds-cohort-15/output/**
+```
+
+Look at output
+
+```bash
+gsutil cat gs://dds-cohort-15/output/out.txt
+```
+
+## run dsub - trial 3
+
+Run dsub running a script and capturing output
+
+```bash
+echo 'echo "Hello World" > "${OUT}"' > hello.sh
+```
+
 ```bash
 dsub \
   --provider google-cls-v2 \
   --image ubuntu:24.04 \
-  --project my-project-colab-366203 \
+  --project "${my_project}" \
   --regions us-central1 \
   --logging gs://dds-cohort-15/logging/ \
   --output OUT=gs://dds-cohort-15/output/out.script.txt \
@@ -143,23 +207,154 @@ dsub \
   --wait
 ```
 
+Look at bucket
+
+```bash
+gsutil ls gs://dds-cohort-15/**
+
+gsutil ls gs://dds-cohort-15/output/**
+```
+
+Look at output
+
+```bash
+gsutil cat gs://dds-cohort-15/output/out.script.txt
+```
+
+## run dsub - trial 4
+
+Run dsub running a script with input and capturing output
+
+Create input data
+
+```bash
+echo 'Hello, world!' > /tmp/input.txt
+
+gsutil cp /tmp/input.txt gs://dds-cohort-15/input/input.txt
+gsutil cat gs://dds-cohort-15/input/input.txt
+```
+
+Create a script that generates output from input
+
+```bash
+<<'eof' cat > hello-script.sh
+#!/bin/bash
+sed -e 's/Hello/Greetings/' "${INPUT}" > "${OUTPUT}"
+date >> "${OUTPUT}"
+eof
+```
+
+run dsub
+
 ```bash
 dsub \
   --provider google-cls-v2 \
   --image ubuntu:24.04 \
-  --project my-project-colab-366203 \
+  --project "${my_project}" \
   --regions us-central1 \
   --logging gs://dds-cohort-15/logging/ \
-  --script ./multi-job.sh \
-  --tasks ./run.tsv \
+  --input INPUT=gs://dds-cohort-15/input/input.txt \
+  --output OUTPUT=gs://dds-cohort-15/output/in-out.script.txt \
+  --script ./hello-script.sh \
   --wait
 ```
 
+Look at bucket
+
+```bash
+gsutil ls gs://dds-cohort-15/**
+
+gsutil ls gs://dds-cohort-15/output/**
+```
+
+Look at output
+
+```bash
+gsutil cat gs://dds-cohort-15/output/in-out.script.txt
+```
+
+## run dsub - trial 5
+
+Run dsub running script multiple times with input and capturing output
+
+Create input data
+
+```bash
+echo 'Hello, world!' > /tmp/input.txt
+
+gsutil cp /tmp/input.txt gs://dds-cohort-15/input/input.txt
+gsutil cat gs://dds-cohort-15/input/input.txt
+```
+
+Create a script that generates output from input
+
+```bash
+<<'eof' cat > multi-job.sh
+#!/bin/bash
+sed -e 's/Hello/Greetings/' "${INPUT}" > "${OUTPUT}"
+date >> "${OUTPUT}"
+eof
+```
+
+Create the TSV file with inputs and outputs
+
+```bash
+<<eof sed -e's/ *{tab} */\t/g' > run.tsv
+--input INPUT  {tab} --output OUTPUT
+gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out1.multi.txt
+gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out2.multi.txt
+gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out3.multi.txt
+gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out4.multi.txt
+gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out5.multi.txt
+gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out6.multi.txt
+gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out7.multi.txt
+gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out8.multi.txt
+gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out9.multi.txt
+eof
+
+cat -vetn run.tsv
+```
+
+run dsub
+
 ```bash
 dsub \
   --provider google-cls-v2 \
   --image ubuntu:24.04 \
-  --project my-project-colab-366203 \
+  --project "${my_project}" \
+  --regions us-central1 \
+  --logging gs://dds-cohort-15/logging/ \
+  --script ./multi-job.sh \
+  --tasks ./run.tsv \
+  --wait \
+  &
+```
+
+Look at bucket
+
+```bash
+gsutil ls gs://dds-cohort-15/**
+
+gsutil ls gs://dds-cohort-15/output/*multi.txt
+```
+
+Look at output
+
+```bash
+gsutil cat gs://dds-cohort-15/output/*multi.txt
+```
+
+
+
+## run dsub - trial 6
+
+Run dsub on spot VM instance
+
+```bash
+dsub \
+  --provider google-cls-v2 \
+  --image ubuntu:24.04 \
+  --project "${my_project}" \
   --preemptible \
   --retries 3 \
   --regions us-central1 \
@@ -170,20 +365,68 @@ dsub \
   &
 ```
 
+Look at bucket
+
 ```bash
-dsub \
-  --provider google-cls-v2 \
-  --image us.gcr.io/my-project-colab-366203/rwcitek:latest \
-  --project my-project-colab-366203 \
-  --preemptible \
-  --retries 3 \
-  --regions us-central1 \
-  --logging gs://dds-cohort-15/logging/ \
-  --script ./multi-job.sh \
-  --tasks ./run.tsv \
-  --wait \
-  &
+gsutil ls gs://dds-cohort-15/**
+
+gsutil ls gs://dds-cohort-15/output/*multi.txt
 ```
+
+Look at output
+
+```bash
+gsutil cat gs://dds-cohort-15/output/*multi.txt
+```
+
+
+## GCR
+
+### pull an image from Docker Hub
+
+```bash
+docker image list -a
+docker pull ubuntu:24.04
+docker image list -a
+```
+
+### authenticate to GCP
+
+Not needed if running on a GCP VM.
+
+```bash
+gcloud auth login --no-launch-browser
+```
+
+### set up GCR
+
+Set up to use only us.gcr.io
+
+```bash
+gcloud auth configure-docker
+
+# vi ~/.docker/config.json
+```
+
+tag the image
+
+```bash
+my_project=$( gcloud config get-value project )
+docker tag ubuntu:24.04 us.gcr.io/"${my_project}"/dsub_example:latest
+docker image list -a | grep gcr.io
+```
+
+### push an image to GCR
+
+```bash
+docker push us.gcr.io/"${my_project}"/dsub_example:latest
+```
+
+### pull an image from GCR
+```bash
+docker pull us.gcr.io/"${my_project}"/dsub_example:latest
+```
+
 
 ```bash
 dsub \
@@ -199,3 +442,19 @@ dsub \
   --wait \
   &
 ```
+
+```bash
+dsub \
+  --provider google-cls-v2 \
+  --image us.gcr.io/my-project-colab-366203/dsub-example:latest \
+  --project my-project-colab-366203 \
+  --preemptible \
+  --retries 3 \
+  --regions us-central1 \
+  --logging gs://dds-cohort-15/logging/ \
+  --script ./multi-job.sh \
+  --tasks ./run.tsv \
+  --wait \
+  &
+```
+
