@@ -361,7 +361,7 @@ Run dsub on spot VM instance
 ```bash
 dsub \
   --provider google-cls-v2 \
-  --image ubuntu:24.04 \
+  --image gcr.io/google/ubuntu:24.04 \
   --project "${my_project}" \
   --preemptible \
   --retries 3 \
