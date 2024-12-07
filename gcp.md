@@ -357,6 +357,7 @@ dsub \
   --project "${my_project}" \
   --preemptible \
   --retries 3 \
+  --use-private-address \
   --regions us-central1 \
   --logging gs://dds-cohort-15/logging/ \
   --script ./multi-job.sh \
