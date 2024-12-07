@@ -37,6 +37,30 @@ sudo usermod -aG docker ${USER}
 exec sudo su - ${USER} 
 ```
 
+### start a dsub Docker instance
+
+Pull the image
+```bash
+docker image pull rwcitek/dsub
+```
+Launch the container instance
+```bash
+( dsub_tmp=/tmp/dsub-$( date +%s ) &&
+docker container run \
+  --rm \
+  --detach \
+  --name    dsub \
+  --volume  /var/run/docker.sock:/var/run/docker.sock \
+  --volume  /tmp:/tmp \
+  --env     TMPDIR=${dsub_tmp} \
+  --workdir ${dsub_tmp} \
+  rwcitek/dsub sleep inf
+)
+```
+Exec into the instance
+```bash
+docker container exec -it dsub /bin/bash
+```
 ### pull an image from Docker Hub
 ```bash
 docker image list -a
