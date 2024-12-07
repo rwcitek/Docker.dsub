@@ -354,6 +354,11 @@ gsutil cat gs://dds-cohort-15/output/*multi.txt
 
 ## GCR
 
+### FIXME: GCP adjustments
+- add private VPC
+- add gateway, maybe
+
+
 ### pull an image from Docker Hub
 
 Pull
