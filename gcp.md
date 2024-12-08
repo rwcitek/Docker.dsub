@@ -12,7 +12,7 @@ In part, based on ...
 Setup
 - E2-micro
 - Boot disk:
-  - Image: Ubuntu 24.04 LTS88, x86/64, amd64
+  - Image: Ubuntu 24.04 LTS, x86/64, amd64
   - Type: standard persistent disk
 - Access scopes:
   - Allow full access to all Cloud APIs
