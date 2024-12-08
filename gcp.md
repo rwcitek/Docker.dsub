@@ -390,6 +390,7 @@ COPY Dockerfile /
 eof
 
 docker build -t alpine-with-bash:example .
+docker image list -a
 ```
 
 ### set up GCR
