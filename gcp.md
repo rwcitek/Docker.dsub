@@ -156,7 +156,7 @@ Look at bucket
 
 ```bash
 gsutil ls gs://"${my_project}"/**
-
+echo ===
 gsutil ls gs://"${my_project}"/logging/**
 ```
 
@@ -188,7 +188,7 @@ Look at bucket
 
 ```bash
 gsutil ls gs://"${my_project}"/**
-
+echo ===
 gsutil ls gs://"${my_project}"/output/**
 ```
 
@@ -223,7 +223,7 @@ Look at bucket
 
 ```bash
 gsutil ls gs://"${my_project}"/**
-
+echo ===
 gsutil ls gs://"${my_project}"/output/**
 ```
 
@@ -276,7 +276,7 @@ Look at bucket
 
 ```bash
 gsutil ls gs://"${my_project}"/**
-
+echo ===
 gsutil ls gs://"${my_project}"/output/**
 ```
 
@@ -347,7 +347,7 @@ Look at bucket
 
 ```bash
 gsutil ls gs://"${my_project}"/**
-
+echo ===
 gsutil ls gs://"${my_project}"/output/*multi.txt
 ```
 
@@ -448,7 +448,7 @@ Look at bucket
 
 ```bash
 gsutil ls gs://"${my_project}"/**
-
+echo ===
 gsutil ls gs://"${my_project}"/output/*multi.txt
 ```
 
