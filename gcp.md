@@ -148,7 +148,8 @@ dsub \
   --regions us-central1 \
   --logging gs://"${my_project}"/logging/ \
   --command 'echo "Hello World"' \
-  --wait
+  --wait \
+  &
 ```
 
 Look at bucket
@@ -179,7 +180,8 @@ dsub \
   --logging gs://"${my_project}"/logging/ \
   --output OUT=gs://"${my_project}"/output/out.txt \
   --command 'echo "Hello World" > "${OUT}"' \
-  --wait
+  --wait \
+  &
 ```
 
 Look at bucket
@@ -213,7 +215,8 @@ dsub \
   --logging gs://"${my_project}"/logging/ \
   --output OUT=gs://"${my_project}"/output/out.script.txt \
   --script hello.sh \
-  --wait
+  --wait \
+  &
 ```
 
 Look at bucket
@@ -265,7 +268,8 @@ dsub \
   --input INPUT=gs://"${my_project}"/input/input.txt \
   --output OUTPUT=gs://"${my_project}"/output/in-out.script.txt \
   --script ./hello-script.sh \
-  --wait
+  --wait \
+  &
 ```
 
 Look at bucket
