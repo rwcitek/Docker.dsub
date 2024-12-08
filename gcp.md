@@ -112,9 +112,9 @@ gsutil ls
 ### create a bucket in GCS
 ```bash
 gsutil ls
-gsutil mb gs://dds-cohort-15
+gsutil mb gs://"${my_project}"
 gsutil ls
-gsutil ls gs://dds-cohort-15/
+gsutil ls gs://"${my_project}"/
 ```
 
 ### copy a file to a bucket in GCS
@@ -124,8 +124,8 @@ echo 'Hello, world!' > /tmp/input.txt
 ```
 
 ```bash
-gsutil cp /tmp/input.txt gs://dds-cohort-15/
-gsutil ls gs://dds-cohort-15/**
+gsutil cp /tmp/input.txt gs://"${my_project}"/
+gsutil ls gs://"${my_project}"/**
 ```
 
 ## application authenticate
@@ -146,7 +146,7 @@ dsub \
   --image ubuntu:24.04 \
   --project "${my_project}" \
   --regions us-central1 \
-  --logging gs://dds-cohort-15/logging/ \
+  --logging gs://"${my_project}"/logging/ \
   --command 'echo "Hello World"' \
   --wait
 ```
@@ -154,15 +154,15 @@ dsub \
 Look at bucket
 
 ```bash
-gsutil ls gs://dds-cohort-15/**
+gsutil ls gs://"${my_project}"/**
 
-gsutil ls gs://dds-cohort-15/logging/**
+gsutil ls gs://"${my_project}"/logging/**
 ```
 
 Look at logs
 
 ```bash
-gsutil cat gs://dds-cohort-15/logging/echo--root*.log
+gsutil cat gs://"${my_project}"/logging/echo--root*.log
 ```
 
 
@@ -176,8 +176,8 @@ dsub \
   --image ubuntu:24.04 \
   --project "${my_project}" \
   --regions us-central1 \
-  --logging gs://dds-cohort-15/logging/ \
-  --output OUT=gs://dds-cohort-15/output/out.txt \
+  --logging gs://"${my_project}"/logging/ \
+  --output OUT=gs://"${my_project}"/output/out.txt \
   --command 'echo "Hello World" > "${OUT}"' \
   --wait
 ```
@@ -185,15 +185,15 @@ dsub \
 Look at bucket
 
 ```bash
-gsutil ls gs://dds-cohort-15/**
+gsutil ls gs://"${my_project}"/**
 
-gsutil ls gs://dds-cohort-15/output/**
+gsutil ls gs://"${my_project}"/output/**
 ```
 
 Look at output
 
 ```bash
-gsutil cat gs://dds-cohort-15/output/out.txt
+gsutil cat gs://"${my_project}"/output/out.txt
 ```
 
 ## run dsub - trial 3
@@ -210,8 +210,8 @@ dsub \
   --image ubuntu:24.04 \
   --project "${my_project}" \
   --regions us-central1 \
-  --logging gs://dds-cohort-15/logging/ \
-  --output OUT=gs://dds-cohort-15/output/out.script.txt \
+  --logging gs://"${my_project}"/logging/ \
+  --output OUT=gs://"${my_project}"/output/out.script.txt \
   --script hello.sh \
   --wait
 ```
@@ -219,15 +219,15 @@ dsub \
 Look at bucket
 
 ```bash
-gsutil ls gs://dds-cohort-15/**
+gsutil ls gs://"${my_project}"/**
 
-gsutil ls gs://dds-cohort-15/output/**
+gsutil ls gs://"${my_project}"/output/**
 ```
 
 Look at output
 
 ```bash
-gsutil cat gs://dds-cohort-15/output/out.script.txt
+gsutil cat gs://"${my_project}"/output/out.script.txt
 ```
 
 ## run dsub - trial 4
@@ -239,8 +239,8 @@ Create input data
 ```bash
 echo 'Hello, world!' > /tmp/input.txt
 
-gsutil cp /tmp/input.txt gs://dds-cohort-15/input/input.txt
-gsutil cat gs://dds-cohort-15/input/input.txt
+gsutil cp /tmp/input.txt gs://"${my_project}"/input/input.txt
+gsutil cat gs://"${my_project}"/input/input.txt
 ```
 
 Create a script that generates output from input
@@ -261,9 +261,9 @@ dsub \
   --image ubuntu:24.04 \
   --project "${my_project}" \
   --regions us-central1 \
-  --logging gs://dds-cohort-15/logging/ \
-  --input INPUT=gs://dds-cohort-15/input/input.txt \
-  --output OUTPUT=gs://dds-cohort-15/output/in-out.script.txt \
+  --logging gs://"${my_project}"/logging/ \
+  --input INPUT=gs://"${my_project}"/input/input.txt \
+  --output OUTPUT=gs://"${my_project}"/output/in-out.script.txt \
   --script ./hello-script.sh \
   --wait
 ```
@@ -271,15 +271,15 @@ dsub \
 Look at bucket
 
 ```bash
-gsutil ls gs://dds-cohort-15/**
+gsutil ls gs://"${my_project}"/**
 
-gsutil ls gs://dds-cohort-15/output/**
+gsutil ls gs://"${my_project}"/output/**
 ```
 
 Look at output
 
 ```bash
-gsutil cat gs://dds-cohort-15/output/in-out.script.txt
+gsutil cat gs://"${my_project}"/output/in-out.script.txt
 ```
 
 ## run dsub - trial 5
@@ -291,8 +291,8 @@ Create input data
 ```bash
 echo 'Hello, world!' > /tmp/input.txt
 
-gsutil cp /tmp/input.txt gs://dds-cohort-15/input/input.txt
-gsutil cat gs://dds-cohort-15/input/input.txt
+gsutil cp /tmp/input.txt gs://"${my_project}"/input/input.txt
+gsutil cat gs://"${my_project}"/input/input.txt
 ```
 
 Create a script that generates output from input
@@ -316,7 +316,7 @@ $(
 seq -w 1 10000 |
 head -${n} |
 while read seq ; do
-  echo gs://dds-cohort-15/input/input.txt {tab} gs://dds-cohort-15/output/out"${seq}".multi.txt
+  echo gs://"${my_project}"/input/input.txt {tab} gs://"${my_project}"/output/out_"${seq}".multi.txt
 done
 )
 eof
@@ -332,7 +332,7 @@ dsub \
   --image ubuntu:24.04 \
   --project "${my_project}" \
   --regions us-central1 \
-  --logging gs://dds-cohort-15/logging/ \
+  --logging gs://"${my_project}"/logging/ \
   --script ./multi-job.sh \
   --tasks ./run.tsv \
   --wait \
@@ -342,15 +342,15 @@ dsub \
 Look at bucket
 
 ```bash
-gsutil ls gs://dds-cohort-15/**
+gsutil ls gs://"${my_project}"/**
 
-gsutil ls gs://dds-cohort-15/output/*multi.txt
+gsutil ls gs://"${my_project}"/output/*multi.txt
 ```
 
 Look at output
 
 ```bash
-gsutil cat gs://dds-cohort-15/output/*multi.txt
+gsutil cat gs://"${my_project}"/output/*multi.txt
 ```
 
 ## GCR
@@ -433,7 +433,7 @@ dsub \
   --retries 1 \
   --use-private-address \
   --regions us-central1 \
-  --logging gs://dds-cohort-15/logging/ \
+  --logging gs://"${my_project}"/logging/ \
   --script ./multi-job.sh \
   --tasks ./run.tsv \
   --wait \
@@ -443,15 +443,15 @@ dsub \
 Look at bucket
 
 ```bash
-gsutil ls gs://dds-cohort-15/**
+gsutil ls gs://"${my_project}"/**
 
-gsutil ls gs://dds-cohort-15/output/*multi.txt
+gsutil ls gs://"${my_project}"/output/*multi.txt
 ```
 
 Look at output
 
 ```bash
-gsutil cat gs://dds-cohort-15/output/*multi.txt
+gsutil cat gs://"${my_project}"/output/*multi.txt
 ```
 
 
