@@ -34,7 +34,8 @@ curl -fSL -o /tmp/get-docker.sh https://get.docker.com
 sed -i -e 's/sleep 20/sleep 1/' /tmp/get-docker.sh
 sudo sh /tmp/get-docker.sh
 sudo usermod -aG docker ${USER}
-exec sudo su - ${USER} 
+exec sudo su - ${USER}
+docker version
 ```
 
 ### start a dsub Docker instance
