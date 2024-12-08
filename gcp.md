@@ -120,11 +120,11 @@ gsutil ls gs://"${my_project}"/
 ### copy a file to a bucket in GCS
 
 ```bash
-echo 'Hello, world!' > /tmp/input.txt
+echo 'Hello, world!' > "${TMPDIR}"input.txt
 ```
 
 ```bash
-gsutil cp /tmp/input.txt gs://"${my_project}"/
+gsutil cp "${TMPDIR}"input.txt gs://"${my_project}"/
 gsutil ls gs://"${my_project}"/**
 ```
 
@@ -237,9 +237,9 @@ Run dsub running a script with input and capturing output
 Create input data
 
 ```bash
-echo 'Hello, world!' > /tmp/input.txt
+echo 'Hello, world!' > "${TMPDIR}"input.txt
 
-gsutil cp /tmp/input.txt gs://"${my_project}"/input/input.txt
+gsutil cp "${TMPDIR}"input.txt gs://"${my_project}"/input/input.txt
 gsutil cat gs://"${my_project}"/input/input.txt
 ```
 
@@ -289,9 +289,9 @@ Run dsub running script multiple times with input and capturing output
 Create input data
 
 ```bash
-echo 'Hello, world!' > /tmp/input.txt
+echo 'Hello, world!' > "${TMPDIR}"input.txt
 
-gsutil cp /tmp/input.txt gs://"${my_project}"/input/input.txt
+gsutil cp "${TMPDIR}"input.txt gs://"${my_project}"/input/input.txt
 gsutil cat gs://"${my_project}"/input/input.txt
 ```
 
