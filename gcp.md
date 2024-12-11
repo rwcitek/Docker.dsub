@@ -94,6 +94,7 @@ my_project=abc
 
 # set default project
 gcloud config set project "${my_project}"
+gcloud config get-value project
 ```
 
 assign project to a variable
