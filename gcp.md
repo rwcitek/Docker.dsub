@@ -23,7 +23,7 @@ Setup
 - security
   - Access scopes:
     - Allow full access to all Cloud APIs
-  - manage access:
+  - manage access: ( optional )
     - Add manually generated SSH keys
       - add item
 - Create
