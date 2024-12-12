@@ -8,18 +8,26 @@ In part, based on ...
 ### create a project ( if needed )
 - https://console.cloud.google.com/projectcreate
 
-
-
 ### create a VM in GCP
 - https://console.cloud.google.com/compute/instancesAdd
 
 Setup
-- E2-micro
-- Boot disk:
-  - Image: Ubuntu 24.04 LTS, x86/64, amd64
-  - Type: standard persistent disk
-- Access scopes:
-  - Allow full access to all Cloud APIs
+- enable Compute Engine API
+  - https://console.cloud.google.com/marketplace/product/google/compute.googleapis.com
+- machine configuration
+  - E2-micro
+- os and storage
+  - Boot disk:
+    - Image: Ubuntu 24.04 LTS, x86/64, amd64
+    - Type: standard persistent disk
+- security
+  - Access scopes:
+    - Allow full access to all Cloud APIs
+  - manage access:
+    - Add manually generated SSH keys
+      - add item
+- Create
+
 
 ### connect to the VM using web SSH
 - https://console.cloud.google.com/compute/instances
