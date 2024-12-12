@@ -5,6 +5,10 @@
 In part, based on ...
 - https://cloud.google.com/batch/docs/dsub
 
+### create a project ( if needed )
+- https://console.cloud.google.com/projectcreate
+
+
 
 ### create a VM in GCP
 - https://console.cloud.google.com/compute/instancesAdd
