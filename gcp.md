@@ -326,6 +326,7 @@ Create a script that generates output from input
 sed -e 's/Hello/Greetings/' "${INPUT}" > "${OUTPUT}"
 date >> "${OUTPUT}"
 cat /etc/os-release >> "${OUTPUT}"
+ping -c 3 www.google.com >> "${OUTPUT}"
 eof
 ```
 
