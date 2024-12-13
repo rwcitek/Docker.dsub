@@ -72,16 +72,18 @@ docker container run \
 )
 ```
 
+Update the software in the container instance ( optional )
+```bash
+docker container exec -i dsub /bin/bash <<'eof'
+  apt-get update
+  apt-get -y dist-upgrade
+  pip install dsub --upgrade
+eof
+```
+
 Exec into the instance
 ```bash
 docker container exec -it dsub /bin/bash
-```
-
-Update the software in the container instance ( optional )
-```bash
-apt-get update
-apt-get -y dist-upgrade
-pip install dsub --upgrade
 ```
 
 ## authenticate to GCP
