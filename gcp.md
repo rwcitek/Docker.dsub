@@ -151,6 +151,10 @@ Likely not needed in GCP VM
 gcloud auth application-default login --no-launch-browser
 ```
 
+## enable Cloud Life Sciences API
+
+- https://console.developers.google.com/apis/api/lifesciences.googleapis.com/overview
+
 ## run dsub - trial 1
 
 Run dsub
@@ -374,10 +378,30 @@ gsutil cat gs://"${my_project}"/output/*multi.txt
 
 ## GCR
 
-### FIXME: GCP adjustments
-- add private VPC
-- add gateway, maybe
+### enable Artifact Registry API
 
+- https://console.developers.google.com/apis/api/artifactregistry.googleapis.com/overview
+
+
+### enable a VPC
+- https://console.cloud.google.com/networking/networks/list
+  - enable private google access
+    - default
+    - subnets
+    - us-central1
+    - default
+    - edit
+    - Private Google Access: On
+    - save
+
+### enable Clout NAT
+- https://console.cloud.google.com/net-services/nat/list  
+  - get started
+  - GW name: dsub-example
+  - network: default
+  - region: us-central1
+  - router: dsub-example
+  - create
 
 ### pull an image from Docker Hub
 
