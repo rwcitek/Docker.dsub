@@ -376,6 +376,9 @@ Look at output
 gsutil cat gs://"${my_project}"/output/*multi.txt
 ```
 
+View quota limits
+- https://console.cloud.google.com/iam-admin/quotas
+
 ## GCR
 
 ### enable Artifact Registry API
