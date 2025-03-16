@@ -144,11 +144,6 @@ docker container stop dsub
 ## Dockerfile
 Details on how the Dockerfile was created are in a [gist](https://gist.github.com/rwcitek/b3dbb57c56d3d450bdef374f643604d5)
 
-To view the Dockerfile that created the image.
-```bash
-docker container run --rm rwcitek/dsub cat /Dockerfile
-```
-
 ## Run the gist
 Build the image.
 ```bash
@@ -166,24 +161,49 @@ curl -s https://gist.github.com/rwcitek/b3dbb57c56d3d450bdef374f643604d5 |
 docker image list | grep dsub
 ```
 
+To view the Dockerfile that created the image.
+```bash
+docker container run --rm rwcitek/dsub cat /Dockerfile
+```
+
 Push to Dockerhub.
 ```bash
+# log in
+docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" https://index.docker.io/v1/
+
 # create tags
 tag=$( date +%s )
 docker image tag dsub:build-latest dsub:${tag}
-docker image tag dsub:build-latest rwcitek/dsub:${tag}
-docker image tag dsub:build-latest rwcitek/dsub
+docker image tag dsub:build-latest "$DOCKER_USERNAME"/dsub:${tag}
+docker image tag dsub:build-latest "$DOCKER_USERNAME"/dsub
 docker image list | grep dsub
 
-# log in
-docker login
-
 # push to Dockerhub
-docker push rwcitek/dsub:${tag}
-docker push rwcitek/dsub:latest
+docker push "$DOCKER_USERNAME"/dsub:${tag}
+docker push "$DOCKER_USERNAME"/dsub:latest
 ```
 
+## Different architecture
+To build, tag, and push for a different architecture.  Below, the commands
+build for both arm64 and amd64.
 
-
-
+```bash
+(
+tag=$( date +%s )
+mkdir z.${tag}
+cd z.${tag}
+docker container run --rm rwcitek/dsub sed -e 's#Dockerfile[^ ]*#Dockerfile#' /Dockerfile > Dockerfile 
+docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" https://index.docker.io/v1/
+docker buildx create --use
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -t "$DOCKER_USERNAME"/dsub:${tag} \
+  -t "$DOCKER_USERNAME"/dsub:latest \
+  -f Dockerfile \
+  --push \
+  .
+cd ..
+rm -rf ./z.${tag}/
+)
+```
 
