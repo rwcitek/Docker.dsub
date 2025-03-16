@@ -153,9 +153,16 @@ docker container run --rm rwcitek/dsub cat /Dockerfile
 Build the image.
 ```bash
 curl -s https://gist.github.com/rwcitek/b3dbb57c56d3d450bdef374f643604d5 |
+  # get the raw URL
   grep -o '/.*/raw/.*.sh' |
-  xargs -r -I {} curl -L -s https://gist.githubusercontent.com/{} > dsub.docker.build.sh
-bash dsub.docker.build.sh
+  # add the schema and host
+  sed -e 's#^#https://gist.githubusercontent.com#' |
+  # get the raw URL contents
+  xargs -r curl -s -L  |
+  # save contents to a file
+  tee dsub.docker.build.sh |
+  # run the file
+  bash
 docker image list | grep dsub
 ```
 
